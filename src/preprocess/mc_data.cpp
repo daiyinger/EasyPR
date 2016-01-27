@@ -87,8 +87,8 @@ cv::Mat cut_top_bottom(const cv::Mat& img) {
 
 void create_learn_data(const char* raw_data_folder, const char* out_data_folder,
                        const int how_many /* = 5000 */) {
-  assert(raw_data_folder);
-  assert(out_data_folder);
+  _ASSERT(raw_data_folder);
+  _ASSERT(out_data_folder);
 
   auto files = Utils::getFiles(raw_data_folder);
 
@@ -133,10 +133,10 @@ void create_learn_data(const char* raw_data_folder, const char* out_data_folder,
 
 void tag_data(const char* source_folder, const char* has_plate_folder,
               const char* no_plate_folder, const char* svm_model) {
-  assert(source_folder);
-  assert(has_plate_folder);
-  assert(no_plate_folder);
-  assert(svm_model);
+  _ASSERT(source_folder);
+  _ASSERT(has_plate_folder);
+  _ASSERT(no_plate_folder);
+  _ASSERT(svm_model);
 
   auto files = Utils::getFiles(source_folder);
 
@@ -154,7 +154,7 @@ void tag_data(const char* source_folder, const char* has_plate_folder,
 
     // auto plate_string = plate_from_path(f);
     cv::Mat image = cv::imread(f);
-    assert(!image.empty());
+    _ASSERT(!image.empty());
 
     std::vector<cv::Mat> maybe_plates;
     locator.plateLocate(image, maybe_plates);

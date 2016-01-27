@@ -61,36 +61,36 @@ int testMain() {
       isRepeat = false;
       switch (select) {
         case 1:
-          assert(test_plate_locate() == 0);
+          _ASSERT(test_plate_locate() == 0);
           break;
         case 2:
-          assert(test_plate_judge() == 0);
+          _ASSERT(test_plate_judge() == 0);
           break;
         case 3:
-          assert(test_plate_detect() == 0);
+          _ASSERT(test_plate_detect() == 0);
           break;
         case 4:
-          assert(test_chars_segment() == 0);
+          _ASSERT(test_chars_segment() == 0);
           break;
         case 5:
-          assert(test_chars_identify() == 0);
+          _ASSERT(test_chars_identify() == 0);
           break;
         case 6:
-          assert(test_chars_recognise() == 0);
+          _ASSERT(test_chars_recognise() == 0);
           break;
         case 7:
-          assert(test_plate_recognize() == 0);
+          _ASSERT(test_plate_recognize() == 0);
           break;
         case 8:
-          assert(test_plate_locate() == 0);
-          assert(test_plate_judge() == 0);
-          assert(test_plate_detect() == 0);
+          _ASSERT(test_plate_locate() == 0);
+          _ASSERT(test_plate_judge() == 0);
+          _ASSERT(test_plate_detect() == 0);
 
-          assert(test_chars_segment() == 0);
-          assert(test_chars_identify() == 0);
-          assert(test_chars_recognise() == 0);
+          _ASSERT(test_chars_segment() == 0);
+          _ASSERT(test_chars_identify() == 0);
+          _ASSERT(test_chars_recognise() == 0);
 
-          assert(test_plate_recognize() == 0);
+          _ASSERT(test_plate_recognize() == 0);
           break;
         case 9:
           isExit = true;
@@ -239,8 +239,8 @@ void command_line_handler(int argc, const char* argv[]) {
                  return;
                }
 
-               assert(parser->has("chars"));
-               assert(parser->has("ann"));
+               _ASSERT(parser->has("chars"));
+               _ASSERT(parser->has("ann"));
 
                easypr::AnnTrain ann(parser->get("chars")->c_str(),
                                     parser->get("ann")->c_str());
@@ -275,8 +275,8 @@ void command_line_handler(int argc, const char* argv[]) {
                }
 
                if (parser->has("file")) {
-                 assert(parser->has("file"));
-                 assert(parser->has("svm"));
+                 _ASSERT(parser->has("file"));
+                 _ASSERT(parser->has("svm"));
 
                  auto image = parser->get("file")->val();
                  auto svm = parser->get("svm")->val();

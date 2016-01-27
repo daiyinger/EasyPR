@@ -12,8 +12,8 @@ namespace easypr {
 
 SvmTrain::SvmTrain(const char* plates_folder, const char* xml)
     : plates_folder_(plates_folder), svm_xml_(xml) {
-  assert(plates_folder);
-  assert(xml);
+  _ASSERT(plates_folder);
+  _ASSERT(xml);
 }
 
 void SvmTrain::train() {

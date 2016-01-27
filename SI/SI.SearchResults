@@ -1,0 +1,2 @@
+---- getPDDebug Matches (1 in 1 files) ----
+Plate_recognize.cpp (src\core):    if (getPDDebug()) {

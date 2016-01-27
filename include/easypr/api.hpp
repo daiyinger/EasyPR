@@ -15,7 +15,7 @@ namespace api {
 static bool plate_judge(const char* image, const char* model) {
   cv::Mat src = cv::imread(image);
 
-  assert(!src.empty());
+  _ASSERT(!src.empty());
 
   int result;
   PlateJudge::instance()->plateJudge(src, result);
@@ -26,7 +26,7 @@ static bool plate_judge(const char* image, const char* model) {
 static void plate_locate(const char* image, const bool life_mode = true) {
   cv::Mat src = cv::imread(image);
 
-  assert(!src.empty());
+  _ASSERT(!src.empty());
 
   CPlateLocate plate;
   plate.setDebug(1);
@@ -43,7 +43,7 @@ static std::vector<std::string> plate_recognize(const char* image,
                                                 const bool life_mode = true) {
   cv::Mat img = cv::imread(image);
 
-  assert(!img.empty());
+  _ASSERT(!img.empty());
 
   CPlateRecognize pr;
   pr.setLifemode(life_mode);
@@ -58,7 +58,7 @@ static std::vector<std::string> plate_recognize(const char* image,
 static Color get_plate_color(const char* image) {
   cv::Mat img = cv::imread(image);
 
-  assert(!img.empty());
+  _ASSERT(!img.empty());
 
   return getPlateType(img, true);
 }
