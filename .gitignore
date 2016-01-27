@@ -12,7 +12,8 @@ resources/image/tmp/
 demo
 experi
 /tmp
-
+cv_include
+SI/
 
 #ignore thumbnails created by windows
 Thumbs.db

@@ -98,7 +98,7 @@ cv::Ptr<cv::ml::TrainData> AnnTrain::tdata() {
     std::cout << "  >> Featuring characters " << char_key << " in "
               << sub_folder << std::endl;
 
-    auto chars_files = utils::getFiles(sub_folder);
+    auto chars_files = utils::getFiles(sub_folder);	//获取目录下的文件列表
     for (auto file : chars_files) {
       auto img = cv::imread(file, 0);  // a grayscale image
       auto fps = features(img, kPredictSize);

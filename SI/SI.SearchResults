@@ -1,2 +1,7 @@
----- getPDDebug Matches (1 in 1 files) ----
-Plate_recognize.cpp (src\core):    if (getPDDebug()) {
+---- AnnTrain Matches (7 in 2 files) ----
+Ann_train.cpp (e:\drfiles\code\opencv\easypr\src\train):AnnTrain::AnnTrain(const char* chars_folder, const char* xml)
+Ann_train.cpp (e:\drfiles\code\opencv\easypr\src\train):void AnnTrain::train() {
+Ann_train.cpp (e:\drfiles\code\opencv\easypr\src\train):void AnnTrain::test() {
+Ann_train.cpp (e:\drfiles\code\opencv\easypr\src\train):cv::Ptr<cv::ml::TrainData> AnnTrain::tdata() {
+Ann_train.h (e:\drfiles\code\opencv\easypr\include\easypr\train):class AnnTrain : public ITrain {
+Ann_train.h (e:\drfiles\code\opencv\easypr\include\easypr\train):  explicit AnnTrain(const char* chars_folder, const char* xml);
