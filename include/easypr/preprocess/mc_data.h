@@ -17,6 +17,10 @@
 #ifndef EASYPR_CORE_MCDATA_H_
 #define EASYPR_CORE_MCDATA_H_
 
+#ifndef DASSERT
+#define DASSERT
+#endif
+
 #include <string>
 
 namespace easypr {

@@ -1,6 +1,10 @@
 #ifndef EASYPR_UTIL_UTIL_H_
 #define EASYPR_UTIL_UTIL_H_
 
+#ifndef DASSERT
+#define DASSERT
+#endif
+
 #include <fstream>
 #include <iostream>
 #include <string>

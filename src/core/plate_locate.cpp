@@ -537,8 +537,8 @@ bool CPlateLocate::rotation(Mat &in, Mat &out, const Size rect_size,
   float width = x + in.cols < in_large.cols ? in.cols : in_large.cols - x;
   float height = y + in.rows < in_large.rows ? in.rows : in_large.rows - y;
 
-  /*_ASSERT(width == in.cols);
-  _ASSERT(height == in.rows);*/
+  /*DASSERT(width == in.cols);
+  DASSERT(height == in.rows);*/
 
   if (width != in.cols || height != in.rows) return false;
 
@@ -581,7 +581,7 @@ bool CPlateLocate::isdeflection(const Mat &in, const double angle,
   int nRows = in.rows;
   int nCols = in.cols;
 
-  _ASSERT(in.channels() == 1);
+  DASSERT(in.channels() == 1);
 
   int comp_index[3];
   int len[3];

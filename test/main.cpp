@@ -61,36 +61,36 @@ int testMain() {
       isRepeat = false;
       switch (select) {
         case 1:
-          _ASSERT(test_plate_locate() == 0);
+          DASSERT(test_plate_locate() == 0);
           break;
         case 2:
-          _ASSERT(test_plate_judge() == 0);
+          DASSERT(test_plate_judge() == 0);
           break;
         case 3:
-          _ASSERT(test_plate_detect() == 0);
+          DASSERT(test_plate_detect() == 0);
           break;
         case 4:
-          _ASSERT(test_chars_segment() == 0);
+          DASSERT(test_chars_segment() == 0);
           break;
         case 5:
-          _ASSERT(test_chars_identify() == 0);
+          DASSERT(test_chars_identify() == 0);
           break;
         case 6:
-          _ASSERT(test_chars_recognise() == 0);
+          DASSERT(test_chars_recognise() == 0);
           break;
         case 7:
-          _ASSERT(test_plate_recognize() == 0);
+          DASSERT(test_plate_recognize() == 0);
           break;
         case 8:
-          _ASSERT(test_plate_locate() == 0);
-          _ASSERT(test_plate_judge() == 0);
-          _ASSERT(test_plate_detect() == 0);
+          DASSERT(test_plate_locate() == 0);
+          DASSERT(test_plate_judge() == 0);
+          DASSERT(test_plate_detect() == 0);
 
-          _ASSERT(test_chars_segment() == 0);
-          _ASSERT(test_chars_identify() == 0);
-          _ASSERT(test_chars_recognise() == 0);
+          DASSERT(test_chars_segment() == 0);
+          DASSERT(test_chars_identify() == 0);
+          DASSERT(test_chars_recognise() == 0);
 
-          _ASSERT(test_plate_recognize() == 0);
+          DASSERT(test_plate_recognize() == 0);
           break;
         case 9:
           isExit = true;
@@ -239,8 +239,8 @@ void command_line_handler(int argc, const char* argv[]) {
                  return;
                }
 
-               _ASSERT(parser->has("chars"));
-               _ASSERT(parser->has("ann"));
+               DASSERT(parser->has("chars"));
+               DASSERT(parser->has("ann"));
 
                easypr::AnnTrain ann(parser->get("chars")->c_str(),
                                     parser->get("ann")->c_str());
@@ -275,8 +275,8 @@ void command_line_handler(int argc, const char* argv[]) {
                }
 
                if (parser->has("file")) {
-                 _ASSERT(parser->has("file"));
-                 _ASSERT(parser->has("svm"));
+                 DASSERT(parser->has("file"));
+                 DASSERT(parser->has("svm"));
 
                  auto image = parser->get("file")->val();
                  auto svm = parser->get("svm")->val();

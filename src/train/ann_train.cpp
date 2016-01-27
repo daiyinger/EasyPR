@@ -36,7 +36,7 @@ void AnnTrain::train() {
 }
 
 void AnnTrain::test() {
-  _ASSERT(chars_folder_);
+  DASSERT(chars_folder_);
 
   for (int i = 0; i < kCharsTotalNumber; ++i) {
     auto char_key = kChars[i];
@@ -83,7 +83,7 @@ void AnnTrain::test() {
 }
 
 cv::Ptr<cv::ml::TrainData> AnnTrain::tdata() {
-  _ASSERT(chars_folder_);
+  DASSERT(chars_folder_);
 
   cv::Mat samples;
   std::vector<int> labels;

@@ -17,6 +17,9 @@
 #include <vector>
 #include <initializer_list>
 #include <stdarg.h>
+#ifndef DASSERT
+#define DASSERT
+#endif
 
 #ifdef __GNUC__
 #define DEPRECATED(func) func __attribute__((deprecated))
@@ -183,7 +186,7 @@ class Generator {
   // this method is for subroutine usage printing.
   // e.g., cout << generator("subroutine_name");
   inline Subroutine& operator()(const char* name) {
-    _ASSERT(subroutines_.find(name) != subroutines_.end());
+    DASSERT(subroutines_.find(name) != subroutines_.end());
     return *subroutines_.at(name);
   }
 
