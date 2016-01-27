@@ -34,7 +34,7 @@ class CCharsRecognise {
     if (BLUE == result) color = "À¶ÅÆ";
     if (YELLOW == result) color = "»ÆÅÆ";
 #ifdef OS_WINDOWS
-    color = utils::utf8_to_gbk(color.c_str());
+    //color = utils::utf8_to_gbk(color.c_str());
 #endif
     return color;
   }
