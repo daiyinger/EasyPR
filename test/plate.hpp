@@ -8,14 +8,17 @@ namespace demo {
 using namespace cv;
 using namespace std;
 
+//车牌定位
 int test_plate_locate() {
   cout << "test_plate_locate" << endl;
 
   const string file = "resources/image/test.jpg";
 
+  cout << "file path: "  << file << endl;
+
   cv::Mat src = imread(file);
 
-  // TODO锛氬師plateLocate闇�瑕佽鏇挎崲
+  // TODO：原plateLocate需要被替换
 
   vector<cv::Mat> resultVec;
   CPlateLocate plate;
@@ -23,6 +26,8 @@ int test_plate_locate() {
   plate.setLifemode(true);
 
   int result = plate.plateLocate(src, resultVec);
+
+  //定位车牌成功 依次显示车牌
   if (result == 0) {
     size_t num = resultVec.size();
     for (size_t j = 0; j < num; j++) {
@@ -36,10 +41,12 @@ int test_plate_locate() {
   return result;
 }
 
+//车牌判断 通过kvm判断车牌定位后选定的图像哪些是车牌
 int test_plate_judge() {
   cout << "test_plate_judge" << endl;
 
-  cv::Mat src = imread("resources/image/plate_judge.jpg");
+  std::string img_path = "resources/image/plate_judge.jpg";
+  cv::Mat src = imread(img_path);
 
   vector<cv::Mat> matVec;
 
@@ -48,6 +55,8 @@ int test_plate_judge() {
   CPlateLocate lo;
   lo.setDebug(1);
   lo.setLifemode(true);
+
+  cout << "image path: " << img_path << endl;
 
   int resultLo = lo.plateLocate(src, matVec);
 
@@ -64,10 +73,15 @@ int test_plate_judge() {
 
   int resultJu = PlateJudge::instance()->plateJudge(matVec, resultVec);
 
-  if (0 != resultJu) return -1;
+  if (0 != resultJu) 
+  {
+  	cout << "can't find plate" << endl;
+  	return -1;
+  }
 
-  cout << "plate_judge_img" << endl;
+  cout << "plate_judge_img result" << endl;
   num = resultVec.size();
+  //依次显示判断为车牌的矩阵
   for (size_t j = 0; j < num; j++) {
     Mat resultMat = resultVec[j];
     imshow("plate_judge", resultMat);
@@ -78,14 +92,20 @@ int test_plate_judge() {
   return resultJu;
 }
 
+//车牌检测 通过颜色或者Sobel方式检测是否存在车牌
 int test_plate_detect() {
   cout << "test_plate_detect" << endl;
 
-  cv::Mat src = imread("resources/image/plate_detect.jpg");
+  std::string img_path = "resources/image/plate_detect.jpg";
+
+  cv::Mat src = imread(img_path);
 
   vector<CPlate> resultVec;
   CPlateDetect pd;
   pd.setPDLifemode(true);
+
+  
+  cout << "image path: " << img_path << endl;
 
   int result = pd.plateDetect(src, resultVec);
   if (result == 0) {
@@ -102,14 +122,17 @@ int test_plate_detect() {
   return result;
 }
 
+//车牌识别 
 int test_plate_recognize() {
   cout << "test_plate_recognize" << endl;
-
-  Mat src = imread("resources/image/test.jpg");
+  std::string img_path = "resources/image/test.jpg";
+  Mat src = imread(img_path);
 
   CPlateRecognize pr;
   pr.setLifemode(true);
   pr.setDebug(true);
+
+  cout << "image path: " << img_path << endl;
 
   vector<string> plateVec;
 

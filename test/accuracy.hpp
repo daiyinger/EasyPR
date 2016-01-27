@@ -17,17 +17,19 @@ int accuracyTest(const char* test_path) {
   std::shared_ptr<easypr::Kv> kv(new easypr::Kv);
   kv->load("etc/chinese_mapping");
 
+  cout << "image path: " << test_path << endl;
+
   auto files = Utils::getFiles(test_path);
 
   CPlateRecognize pr;
 
-  // è®¾ç½®Debugæ¨¡å¼
+  // ÉèÖÃDebugÄ£Ê½
 
   pr.setDebug(false);
 
   pr.setLifemode(true);
 
-  // è®¾ç½®è¦å¤„ç†çš„ä¸€å¼ å›¾ç‰‡ä¸­æœ€å¤šæœ‰å¤šå°‘è½¦ç‰Œ
+  // ÉèÖÃÒª´¦ÀíµÄÒ»ÕÅÍ¼Æ¬ÖĞ×î¶àÓĞ¶àÉÙ³µÅÆ
 
   pr.setMaxPlates(4);
 
@@ -40,37 +42,37 @@ int accuracyTest(const char* test_path) {
 
   cout << "Begin to test the easypr accuracy!" << endl;
 
-  // æ€»çš„æµ‹è¯•å›¾ç‰‡æ•°é‡
+  // ×ÜµÄ²âÊÔÍ¼Æ¬ÊıÁ¿
 
   int count_all = 0;
 
-  // é”™è¯¯çš„å›¾ç‰‡æ•°é‡
+  // ´íÎóµÄÍ¼Æ¬ÊıÁ¿
 
   int count_err = 0;
 
-  // æœªè¯†åˆ«çš„å›¾ç‰‡æ•°é‡
+  // Î´Ê¶±ğµÄÍ¼Æ¬ÊıÁ¿
 
   int count_norecogin = 0;
 
   std::list<std::string> not_recognized_files;
 
-  // æ€»çš„å­—ç¬¦å·®è·
+  // ×ÜµÄ×Ö·û²î¾à
 
   float diff_all = 0;
 
-  // å¹³å‡å­—ç¬¦å·®è·
+  // Æ½¾ù×Ö·û²î¾à
 
   float diff_avg = 0;
 
-  // å®Œå…¨åŒ¹é…çš„è¯†åˆ«æ¬¡æ•°
+  // ÍêÈ«Æ¥ÅäµÄÊ¶±ğ´ÎÊı
 
   float match_count = 0;
 
-  // å®Œå…¨åŒ¹é…çš„è¯†åˆ«æ¬¡æ•°æ‰€å è¯†åˆ«å›¾ç‰‡ä¸­çš„æ¯”ä¾‹
+  // ÍêÈ«Æ¥ÅäµÄÊ¶±ğ´ÎÊıËùÕ¼Ê¶±ğÍ¼Æ¬ÖĞµÄ±ÈÀı
 
   float match_rate = 0;
 
-  // å¼€å§‹å’Œç»“æŸæ—¶é—´
+  // ¿ªÊ¼ºÍ½áÊøÊ±¼ä
 
   time_t begin, end;
   time(&begin);
@@ -78,17 +80,17 @@ int accuracyTest(const char* test_path) {
   for (int i = 0; i < size; i++) {
     string filepath = files[i].c_str();
 
-    // EasyPRå¼€å§‹åˆ¤æ–­è½¦ç‰Œ
+    // EasyPR¿ªÊ¼ÅĞ¶Ï³µÅÆ
 
     Mat src = imread(filepath);
 
-    // å¦‚æœæ˜¯éå›¾åƒæ–‡ä»¶ï¼Œç›´æ¥è¿‡å»
+    // Èç¹ûÊÇ·ÇÍ¼ÏñÎÄ¼ş£¬Ö±½Ó¹ıÈ¥
 
     if (!src.data) continue;
 
     cout << "------------------" << endl;
 
-    // è·å–çœŸå®çš„è½¦ç‰Œ
+    // »ñÈ¡ÕæÊµµÄ³µÅÆ
 
     string plateLicense = Utils::getFileName(filepath);
     cout << kv->get("original_plate") << ":" << plateLicense << endl;
@@ -106,14 +108,14 @@ int accuracyTest(const char* test_path) {
         }
       } else if (num > 1) {
 
-        // å¤šè½¦ç‰Œä½¿ç”¨diffæœ€å°çš„é‚£ä¸ªè®°å½•
+        // ¶à³µÅÆÊ¹ÓÃdiff×îĞ¡µÄÄÇ¸ö¼ÇÂ¼
 
         int mindiff = 10000;
         for (int j = 0; j < num; j++) {
           cout << plateVec[j] << " (" << j + 1 << ")" << endl;
           string colorplate = plateVec[j];
 
-          // è®¡ç®—"è“ç‰Œ:è‹E7KU22"ä¸­å†’å·åé¢çš„è½¦ç‰Œå¤§å°"
+          // ¼ÆËã"À¶ÅÆ:ËÕE7KU22"ÖĞÃ°ºÅºóÃæµÄ³µÅÆ´óĞ¡"
 
           vector<string> spilt_plate = Utils::splitString(colorplate, ':');
 
@@ -128,20 +130,20 @@ int accuracyTest(const char* test_path) {
         cout << kv->get("diff") << ":" << mindiff << kv->get("char") << endl;
         if (mindiff == 0) {
 
-          // å®Œå…¨åŒ¹é…
+          // ÍêÈ«Æ¥Åä
 
           match_count++;
         }
         diff_all = diff_all + mindiff;
       } else {
 
-        // å•è½¦ç‰Œåªè®¡ç®—ä¸€æ¬¡diff
+        // µ¥³µÅÆÖ»¼ÆËãÒ»´Îdiff
 
         for (int j = 0; j < num; j++) {
           cout << plateVec[j] << endl;
           string colorplate = plateVec[j];
 
-          // è®¡ç®—"è“ç‰Œ:è‹E7KU22"ä¸­å†’å·åé¢çš„è½¦ç‰Œå¤§å°"
+          // ¼ÆËã"À¶ÅÆ:ËÕE7KU22"ÖĞÃ°ºÅºóÃæµÄ³µÅÆ´óĞ¡"
 
           vector<string> spilt_plate = Utils::splitString(colorplate, ':');
 
@@ -153,7 +155,7 @@ int accuracyTest(const char* test_path) {
 
             if (diff == 0) {
 
-              // å®Œå…¨åŒ¹é…
+              // ÍêÈ«Æ¥Åä
 
               match_count++;
             }

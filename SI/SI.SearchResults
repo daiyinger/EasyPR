@@ -1,7 +1,14 @@
----- AnnTrain Matches (7 in 2 files) ----
-Ann_train.cpp (e:\drfiles\code\opencv\easypr\src\train):AnnTrain::AnnTrain(const char* chars_folder, const char* xml)
-Ann_train.cpp (e:\drfiles\code\opencv\easypr\src\train):void AnnTrain::train() {
-Ann_train.cpp (e:\drfiles\code\opencv\easypr\src\train):void AnnTrain::test() {
-Ann_train.cpp (e:\drfiles\code\opencv\easypr\src\train):cv::Ptr<cv::ml::TrainData> AnnTrain::tdata() {
-Ann_train.h (e:\drfiles\code\opencv\easypr\include\easypr\train):class AnnTrain : public ITrain {
-Ann_train.h (e:\drfiles\code\opencv\easypr\include\easypr\train):  explicit AnnTrain(const char* chars_folder, const char* xml);
+---- plate_locate Matches (13 in 7 files) ----
+Api.hpp (e:\drfiles\code\opencv\easypr\include\easypr):static void plate_locate(const char* image, const bool life_mode = true) {
+Main.cpp (e:\drfiles\code\opencv\easypr\test):          DASSERT(test_plate_locate() == 0);
+Main.cpp (e:\drfiles\code\opencv\easypr\test):          DASSERT(test_plate_locate() == 0);
+Main.cpp (e:\drfiles\code\opencv\easypr\test):                 easypr::api::plate_locate(parser->get("file")->val().c_str());
+Mc_data.cpp (e:\drfiles\code\opencv\easypr\src\preprocess):#include "easypr/core/plate_locate.h"
+Plate.hpp (e:\drfiles\code\opencv\easypr\test):int test_plate_locate() {
+Plate.hpp (e:\drfiles\code\opencv\easypr\test):  cout << "test_plate_locate" << endl;
+Plate.hpp (e:\drfiles\code\opencv\easypr\test):      imshow("plate_locate", resultMat);
+Plate.hpp (e:\drfiles\code\opencv\easypr\test):    destroyWindow("plate_locate");
+Plate.hpp (e:\drfiles\code\opencv\easypr\test):  cout << "plate_locate_img" << endl;
+Plate_detect.h (e:\drfiles\code\opencv\easypr\include\easypr\core):#include "easypr/core/plate_locate.h"
+Plate_locate.cpp (e:\drfiles\code\opencv\easypr\src\core):#include "easypr/core/plate_locate.h"
+Plate_locate.h (e:\drfiles\code\opencv\easypr\include\easypr\core):// Name:	    plate_locate Header

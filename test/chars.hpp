@@ -5,10 +5,15 @@ namespace easypr {
 
 namespace demo {
 
+//×Ö·û·Ö¸î²âÊÔ 
 int test_chars_segment() {
   std::cout << "test_chars_segment" << std::endl;
 
-  cv::Mat src = cv::imread("resources/image/chars_segment.jpg");
+  std::string img_path = "resources/image/chars_segment.jpg";
+
+  cout << "image path :" << img_path << endl;
+
+  cv::Mat src = cv::imread(img_path);
 
   std::vector<cv::Mat> resultVec;
   CCharsSegment plate;
@@ -27,10 +32,15 @@ int test_chars_segment() {
   return result;
 }
 
+//×Ö·û¼ø±ğ²âÊÔ 
 int test_chars_identify() {
   std::cout << "test_chars_identify" << std::endl;
 
-  cv::Mat plate = cv::imread("resources/image/chars_identify.jpg");
+  std::string img_path = "resources/image/chars_identify.jpg";
+
+  cout << "image path :" << img_path << endl;
+
+  cv::Mat plate = cv::imread(img_path);
 
   std::vector<Mat> matChars;
   std::string license;
@@ -64,7 +74,11 @@ int test_chars_identify() {
 int test_chars_recognise() {
   std::cout << "test_chars_recognise" << std::endl;
 
-  cv::Mat src = cv::imread("resources/image/chars_recognise.jpg");
+  std::string img_path = "resources/image/chars_recognise.jpg";
+  
+  cout << "image path :" << img_path << endl;
+
+  cv::Mat src = cv::imread(img_path);
   CCharsRecognise cr;
 
   std::string plateLicense = "";
