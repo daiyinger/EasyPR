@@ -12,11 +12,14 @@ cv::Mat detectAndMaskFace(cv::Mat& img, cv::CascadeClassifier& cascade,
   cvtColor(img, gray, cv::COLOR_BGR2GRAY);
   resize(gray, smallImg, smallImg.size(), 0, 0, cv::INTER_LINEAR);
   equalizeHist(smallImg, smallImg);
-
+  if (smallImg.empty())
+  {
+	  std::cout << "-------- error --------" << std::endl;
+  }
   cascade.detectMultiScale(smallImg, faces, 1.1, 2,
                            0
-                               //|CASCADE_FIND_BIGGEST_OBJECT
-                               //|CASCADE_DO_ROUGH_SEARCH
+                               |cv::CASCADE_FIND_BIGGEST_OBJECT
+                               |cv::CASCADE_DO_ROUGH_SEARCH
                                | cv::CASCADE_SCALE_IMAGE,
                            cv::Size(30, 30));
   for (auto r = faces.begin(); r != faces.end(); r++) {

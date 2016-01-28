@@ -22,6 +22,10 @@ class SvmTrain : public ITrain {
 
   virtual void test();
 
+  int trainExt();
+
+  int testExt();
+
  private:
   void prepare();
 
@@ -32,6 +36,7 @@ class SvmTrain : public ITrain {
   const char* svm_xml_;
   std::vector<TrainItem> train_file_list_;
   std::vector<TrainItem> test_file_list_;
+  double gamma_;
 };
 }
 

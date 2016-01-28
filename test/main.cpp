@@ -371,8 +371,16 @@ int main(int argc, const char* argv[]) {
         case 3:
           std::cout << "Run \"demo svm\" for more usage." << std::endl;
           {
+		  	int count = 0;
             easypr::SvmTrain svm("tmp/svm", "tmp/svm.xml");
-            svm.train();
+			while(count < 100)
+            {
+            	if(svm.trainExt() == 0)
+            	{
+            		break;
+            	}
+				count++;
+			}
           }
           break;
         case 4:

@@ -10,11 +10,11 @@ namespace preprocess {
 // 图片不要多，10-30张就足够了，EasyPR对GDTS数据集的使用不以量为主要指标
 // 只要这些图片足够反映你数据集的主要特征即可
 
-const char* src_path = "F:/data/easypr-data/tmp-1";
+const char* src_path = "tmp-1";
 
 // TODO 将下面的路径改成你希望生成捐赠给GDTS数据存放的新路径
 
-const char* dst_path = "F:/data/easypr-data/tmp-2";
+const char* dst_path = "tmp-2";
 
 int generate_gdts() {
 
@@ -23,6 +23,8 @@ int generate_gdts() {
   cv::CascadeClassifier cascade;
   std::string cascadeName =
       "resources/model/haarcascade_frontalface_alt_tree.xml";
+
+  cascade.load(cascadeName);
 
   ////获取该路径下的所有文件
 
@@ -45,9 +47,18 @@ int generate_gdts() {
 
     cv::Mat src = cv::imread(filepath);
 
+	if (src.empty())
+	{
+		std::cout << "-------- error --------" << std::endl;
+	}
+
     // EasyPR开始对图片进行模糊化与裁剪化处理
 
     cv::Mat img = imageProcess(src);
+	if (img.empty())
+	{
+		std::cout << "-------- error --------" << std::endl;
+	}
 
     // EasyPR开始对图片进行人脸识别处理
 
@@ -79,7 +90,7 @@ cv::Mat imageProcess(cv::Mat img) {
                          height * 0.99);
 
   cv::Mat dst = img(rect);
-  // GaussianBlur( dst, dst, Size(1, 1), 0, 0, BORDER_DEFAULT );
+  //GaussianBlur( dst, dst, Size(1, 1), 0, 0, BORDER_DEFAULT );
   return dst;
 }
 }

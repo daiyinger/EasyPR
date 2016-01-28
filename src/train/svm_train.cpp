@@ -6,6 +6,9 @@
 #include <ctime>
 #endif
 
+#define AUTO_TRAIN
+
+using namespace std;
 using namespace cv::ml;
 
 namespace easypr {
@@ -14,30 +17,49 @@ SvmTrain::SvmTrain(const char* plates_folder, const char* xml)
     : plates_folder_(plates_folder), svm_xml_(xml) {
   DASSERT(plates_folder);
   DASSERT(xml);
+  gamma_ = 0.f;
 }
 
-void SvmTrain::train() {
+void SvmTrain::train()
+{
+
+}
+
+void SvmTrain::test()
+{
+
+}
+
+int SvmTrain::trainExt() {
   svm_ = cv::ml::SVM::create();
   svm_->setType(cv::ml::SVM::C_SVC);
   svm_->setKernel(cv::ml::SVM::RBF);
   svm_->setDegree(0.1);
   // 1.4 bug fix: old 1.4 ver gamma is 1
+  gamma_ = gamma_ + 0.001;
   svm_->setGamma(0.1); 
-  svm_->setCoef0(0.1);
+  //svm_->setCoef0(0.1);
   svm_->setC(1);
-  svm_->setNu(0.1);
-  svm_->setP(0.1);
-  svm_->setTermCriteria(cvTermCriteria(CV_TERMCRIT_ITER, 100000, 0.00001));
+  //svm_->setNu(0.1);
+  //svm_->setP(0.1);
+  svm_->setTermCriteria(cvTermCriteria(CV_TERMCRIT_ITER, 200, 0.001));
 
   auto train_data = tdata();
 
   fprintf(stdout, ">> Training SVM model, please wait...\n");
   long start = utils::getTimestamp();
-  //svm_->trainAuto(train_data, 10, SVM::getDefaultGrid(SVM::C),
-  //                SVM::getDefaultGrid(SVM::GAMMA), SVM::getDefaultGrid(SVM::P),
-  //                SVM::getDefaultGrid(SVM::NU), SVM::getDefaultGrid(SVM::COEF),
-  //                SVM::getDefaultGrid(SVM::DEGREE), true);
+#ifdef AUTO_TRAIN
+  svm_->trainAuto(train_data, 10, SVM::getDefaultGrid(SVM::C),
+                  SVM::getDefaultGrid(SVM::GAMMA), SVM::getDefaultGrid(SVM::P),
+                  SVM::getDefaultGrid(SVM::NU), SVM::getDefaultGrid(SVM::COEF),
+                  SVM::getDefaultGrid(SVM::DEGREE), false);
+
+  fprintf(stdout, "\nParms: C = %f, P = %f,gamma = %f nu = %f coef = %f degree = %f\n", 
+	svm_->getC(), svm_->getP(), svm_->getGamma(),svm_->getNu(),svm_->getCoef0(),svm_->getDegree());
+
+#else
   svm_->train(train_data);
+#endif
 
   long end = utils::getTimestamp();
   fprintf(stdout, ">> Training done. Time elapse: %ldms\n", end - start);
@@ -45,77 +67,138 @@ void SvmTrain::train() {
   svm_->save(svm_xml_);
   fprintf(stdout, ">> Your SVM Model was saved to %s\n", svm_xml_);
   fprintf(stdout, ">> Testing...\n");
-  this->test();
+
+  int ret =  this->testExt();
+  return ret;
 
 }
 
-void SvmTrain::test() {
-  // 1.4 bug fix: old 1.4 ver there is no null judge
-  if (NULL == svm_)
-    svm_ = cv::ml::SVM::load<cv::ml::SVM>(svm_xml_);
+int SvmTrain::testExt() {
+	int ret = 0; 
+	// 1.4 bug fix: old 1.4 ver there is no null judge
+	if (NULL == svm_)
+		svm_ = cv::ml::SVM::load<cv::ml::SVM>(svm_xml_);
 
-  if (test_file_list_.empty()) {
-    this->prepare();
-  }
+	if (test_file_list_.empty()) {
+		this->prepare();
+	}
 
-  double count_all = test_file_list_.size();
-  double ptrue_rtrue = 0;
-  double ptrue_rfalse = 0;
-  double pfalse_rtrue = 0;
-  double pfalse_rfalse = 0;
+	double count_all = test_file_list_.size();
+	double ptrue_rtrue = 0;
+	double ptrue_rfalse = 0;
+	double pfalse_rtrue = 0;
+	double pfalse_rfalse = 0;
 
-  for (auto item : test_file_list_) {
-    auto image = cv::imread(item.file);
-    if (!image.data) {
-      
-      std::cout << "no" << std::endl;
-      continue;
-    }
-    cv::Mat feature;
-    getHistogramFeatures(image, feature);
+	for (auto item : test_file_list_) {
+		auto image = cv::imread(item.file);
+		if (!image.data) {
+		  
+		  std::cout << "no" << std::endl;
+		  continue;
+		}
+		cv::Mat feature;
+		getHistogramFeatures(image, feature);
 
-    //std::cout << "predict: " << result << std::endl;
+		//std::cout << "predict: " << result << std::endl;
 
-    auto predict = int(svm_->predict(feature));
-    auto real = item.label;
-    if (predict == kForward && real == kForward) ptrue_rtrue++;
-    if (predict == kForward && real == kInverse) ptrue_rfalse++;
-    if (predict == kInverse && real == kForward) pfalse_rtrue++;
-    if (predict == kInverse && real == kInverse) pfalse_rfalse++;
-  }
+		auto predict = int(svm_->predict(feature));
+		auto real = item.label;
+		if (predict == kForward && real == kForward) ptrue_rtrue++;
+		if (predict == kForward && real == kInverse) ptrue_rfalse++;
+		if (predict == kInverse && real == kForward) pfalse_rtrue++;
+		if (predict == kInverse && real == kInverse) pfalse_rfalse++;
+	}
 
-  std::cout << "count_all: " << count_all << std::endl;
-  std::cout << "ptrue_rtrue: " << ptrue_rtrue << std::endl;
-  std::cout << "ptrue_rfalse: " << ptrue_rfalse << std::endl;
-  std::cout << "pfalse_rtrue: " << pfalse_rtrue << std::endl;
-  std::cout << "pfalse_rfalse: " << pfalse_rfalse << std::endl;
+	std::cout << "count_all: " << count_all << std::endl;
+	std::cout << "gamma_: " << gamma_ << std::endl;
+	std::cout << "ptrue_rtrue: " << ptrue_rtrue << std::endl;
+	std::cout << "ptrue_rfalse: " << ptrue_rfalse << std::endl;
+	std::cout << "pfalse_rtrue: " << pfalse_rtrue << std::endl;
+	std::cout << "pfalse_rfalse: " << pfalse_rfalse << std::endl;
 
-  double precise = 0;
-  if (ptrue_rtrue + ptrue_rfalse != 0) {
-    precise = ptrue_rtrue / (ptrue_rtrue + ptrue_rfalse);
-    std::cout << "precise: " << precise << std::endl;
-  } else {
-    std::cout << "precise: "
-              << "NA" << std::endl;
-  }
+	double precise = 0;
+	if (ptrue_rtrue + ptrue_rfalse != 0) {
+		precise = ptrue_rtrue / (ptrue_rtrue + ptrue_rfalse);
+		std::cout << "precise: " << precise << std::endl;
+	} else {
+		std::cout << "precise: "
+	          << "NA" << std::endl;
+	}
 
-  double recall = 0;
-  if (ptrue_rtrue + pfalse_rtrue != 0) {
-    recall = ptrue_rtrue / (ptrue_rtrue + pfalse_rtrue);
-    std::cout << "recall: " << recall << std::endl;
-  } else {
-    std::cout << "recall: "
-              << "NA" << std::endl;
-  }
+	double recall = 0;
+	if (ptrue_rtrue + pfalse_rtrue != 0) {
+		recall = ptrue_rtrue / (ptrue_rtrue + pfalse_rtrue);
+		std::cout << "recall: " << recall << std::endl;
+	} else {
+		std::cout << "recall: "
+	          << "NA" << std::endl;
+	}
 
-  double Fsocre = 0;
-  if (precise + recall != 0) {
-    Fsocre = 2 * (precise * recall) / (precise + recall);
-    std::cout << "Fsocre: " << Fsocre << std::endl;
-  } else {
-    std::cout << "Fsocre: "
-              << "NA" << std::endl;
-  }
+	double Fsocre = 0;
+	if (precise + recall != 0) {
+		Fsocre = 2 * (precise * recall) / (precise + recall);
+		std::cout << "Fsocre: " << Fsocre << std::endl;
+	} else {
+		std::cout << "Fsocre: "
+	          << "NA" << std::endl;
+	}
+
+
+	ofstream myfile("svm_accuracy.txt", ios::app);  
+	if (myfile.is_open()) 
+	{    
+		time_t t = time(0);  // get time now    
+		struct tm* now = localtime(&t);    
+		char buf[80];    
+		strftime(buf, sizeof(buf), "%Y-%m-%d %X", now);    
+		myfile << string(buf) << endl;  
+		myfile << "gamma_: " << gamma_ << std::endl;
+		myfile << "count_all: " << count_all << std::endl;
+		myfile << "ptrue_rtrue: " << ptrue_rtrue << std::endl;
+		myfile << "ptrue_rfalse: " << ptrue_rfalse << std::endl;
+		myfile << "pfalse_rtrue: " << pfalse_rtrue << std::endl;
+		myfile << "pfalse_rfalse: " << pfalse_rfalse << std::endl; 
+		double precise = 0;
+		if (ptrue_rtrue + ptrue_rfalse != 0) {
+			precise = ptrue_rtrue / (ptrue_rtrue + ptrue_rfalse);
+			myfile  << "precise: " << precise << std::endl;
+		} else {
+			myfile  << "precise: "
+		          << "NA" << std::endl;
+		}
+
+		double recall = 0;
+		if (ptrue_rtrue + pfalse_rtrue != 0) {
+			recall = ptrue_rtrue / (ptrue_rtrue + pfalse_rtrue);
+			myfile  << "recall: " << recall << std::endl;
+		} else {
+			myfile  << "recall: "
+		          << "NA" << std::endl;
+		}
+
+		double Fsocre = 0;
+		if (precise + recall != 0) {
+			Fsocre = 2 * (precise * recall) / (precise + recall);
+			myfile  << "Fsocre: " << Fsocre << std::endl;
+		} else {
+			myfile  << "Fsocre: "
+		          << "NA" << std::endl;
+		} 
+		myfile.close();  
+	} 
+	else 
+	{    
+		cout << "Unable to open file";  
+	}
+	if (Fsocre > 0.99)
+	{
+		ret = 0;	
+	}
+	else
+	{
+		ret = 1;
+	}
+	return ret;
 }
 
 void SvmTrain::prepare() {
@@ -167,6 +250,10 @@ void SvmTrain::prepare() {
 }
 
 cv::Ptr<cv::ml::TrainData> SvmTrain::tdata() {
+
+  test_file_list_.clear();
+  train_file_list_.clear();
+
   this->prepare();
 
   cv::Mat samples;
