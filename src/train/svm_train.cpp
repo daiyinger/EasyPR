@@ -6,7 +6,7 @@
 #include <ctime>
 #endif
 
-#define AUTO_TRAIN
+//#define AUTO_TRAIN
 
 using namespace std;
 using namespace cv::ml;
@@ -17,7 +17,7 @@ SvmTrain::SvmTrain(const char* plates_folder, const char* xml)
     : plates_folder_(plates_folder), svm_xml_(xml) {
   DASSERT(plates_folder);
   DASSERT(xml);
-  gamma_ = 0.f;
+  gamma_ = 0.069;
 }
 
 void SvmTrain::train()
@@ -34,26 +34,33 @@ int SvmTrain::trainExt() {
   svm_ = cv::ml::SVM::create();
   svm_->setType(cv::ml::SVM::C_SVC);
   svm_->setKernel(cv::ml::SVM::RBF);
+  gamma_ = gamma_ + 0.001;
   svm_->setDegree(0.1);
   // 1.4 bug fix: old 1.4 ver gamma is 1
-  gamma_ = gamma_ + 0.001;
-  svm_->setGamma(0.1); 
-  //svm_->setCoef0(0.1);
+  svm_->setGamma(gamma_);
+  svm_->setCoef0(0.1);
   svm_->setC(1);
-  //svm_->setNu(0.1);
-  //svm_->setP(0.1);
-  svm_->setTermCriteria(cvTermCriteria(CV_TERMCRIT_ITER, 200, 0.001));
-
+  svm_->setNu(0.1);
+  svm_->setP(0.1);
+  svm_->setTermCriteria(cvTermCriteria(CV_TERMCRIT_ITER, 100000, 0.00001));
+  
+  cv::ml::ParamGrid GridCoef(1, 1, 0.0);
+  cv::ml::ParamGrid GridNu(1, 1, 0.0);
+  cv::ml::ParamGrid GridDegree(1, 1, 0.0);
   auto train_data = tdata();
 
   fprintf(stdout, ">> Training SVM model, please wait...\n");
   long start = utils::getTimestamp();
 #ifdef AUTO_TRAIN
-  svm_->trainAuto(train_data, 10, SVM::getDefaultGrid(SVM::C),
-                  SVM::getDefaultGrid(SVM::GAMMA), SVM::getDefaultGrid(SVM::P),
-                  SVM::getDefaultGrid(SVM::NU), SVM::getDefaultGrid(SVM::COEF),
-                  SVM::getDefaultGrid(SVM::DEGREE), false);
-
+  bool train_res = svm_->trainAuto(train_data, 10, SVM::getDefaultGrid(SVM::C),
+	  SVM::getDefaultGrid(SVM::GAMMA), SVM::getDefaultGrid(SVM::P), 
+	  GridNu, GridCoef, GridDegree
+	  /*SVM::getDefaultGrid(SVM::NU), SVM::getDefaultGrid(SVM::COEF),
+                  SVM::getDefaultGrid(SVM::DEGREE)*/, true);
+  if (train_res != true)
+  {
+	  std::cout << "train error!" << endl;
+  }
   fprintf(stdout, "\nParms: C = %f, P = %f,gamma = %f nu = %f coef = %f degree = %f\n", 
 	svm_->getC(), svm_->getP(), svm_->getGamma(),svm_->getNu(),svm_->getCoef0(),svm_->getDegree());
 
@@ -190,7 +197,7 @@ int SvmTrain::testExt() {
 	{    
 		cout << "Unable to open file";  
 	}
-	if (Fsocre > 0.99)
+	if (ptrue_rfalse < 3 && pfalse_rtrue < 5)//Fsocre > 0.98)
 	{
 		ret = 0;	
 	}
